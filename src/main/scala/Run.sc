@@ -1,8 +1,9 @@
 val v = Vector(1,2,3,7)
 v(3)
 
-var l = List[(Int, String)]
-l = (1,"1") :: List((1, "2"))
+var l : Stream[(Int, String)] = Stream.empty
+val g = (1, "l")
+l = Stream.cons(g, List(g).toStream)
 
 
 val p = 8 :: l

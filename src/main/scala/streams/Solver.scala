@@ -1,6 +1,6 @@
 package streams
 
-import common._
+import scala.collection.immutable.Stream.cons
 
 /**
  * This component implements the solver for the Bloxorz game
@@ -29,9 +29,9 @@ trait Solver extends GameDef {
    * that are inside the terrain.
    */
   def neighborsWithHistory(b: Block, history: List[Move]): Stream[(Block, List[Move])] = {
-    var list = List[(Block, List[Move])]
-    b.neighbors.toStream.foreach(e => list = (e._1, e._2 :: history) :: list)
-
+    var stream: Stream[(Block, List[Move])] = Stream.empty
+    b.legalNeighbors.toStream.foreach(e => stream = cons[(Block, List[Move])]((e._1, e._2 :: history), Stream.empty))
+    stream
   }
 
   /**
@@ -40,7 +40,9 @@ trait Solver extends GameDef {
    * make sure that we don't explore circular paths.
    */
   def newNeighborsOnly(neighbors: Stream[(Block, List[Move])],
-                       explored: Set[Block]): Stream[(Block, List[Move])] = ???
+                       explored: Set[Block]): Stream[(Block, List[Move])] = {
+    neighbors.filter(n => explored.contains(n._1))
+  }
 
   /**
    * The function `from` returns the stream of all possible paths
